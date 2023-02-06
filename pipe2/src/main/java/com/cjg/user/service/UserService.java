@@ -28,6 +28,22 @@ public class UserService {
 	private UserRepo userRepo;
 		
 	
+	public Map<String, Object> checkUserId(User user) {
+		
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		User existUser = userRepo.findByUserId(user.getUserId());
+		
+		if(existUser == null) {
+			returnMap.put("count", 0);
+		}else {
+			returnMap.put("count", 1);
+		}
+		
+		return returnMap;
+		
+	}
+	
 	public Map<String, Object> userInsert(User user) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
@@ -169,10 +185,10 @@ public class UserService {
 		return returnMap;
 	}
 	
-	public Map<String, Object> userList(User user) {
+	public Map<String, Object> userList() {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		Pageable pageable = PageRequest.of(0, user.getBlockCount(), Sort.by("createDate").descending());
+		Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
 		Page<User> page = userRepo.findAll(pageable);
 		
 		List<User> userList = page.getContent();

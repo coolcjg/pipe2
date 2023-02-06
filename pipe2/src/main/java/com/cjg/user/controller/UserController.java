@@ -22,6 +22,11 @@ public class UserController {
 		return userService.userInsert(user);
 	}
 	
+	@PostMapping("/checkUserId")
+	public Map checkUserId(@RequestBody User user){
+		return userService.checkUserId(user);
+	}
+	
 	@GetMapping("/userSelect")
 	public Map userSelect(@RequestBody User user) {
 		return userService.userSelect(user);
@@ -43,8 +48,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/userList")
-	public Map userList(@RequestBody User user) {
-		return userService.userList(user);
+	public Map userList() {
+		return userService.userList();
 	}
 	
 
