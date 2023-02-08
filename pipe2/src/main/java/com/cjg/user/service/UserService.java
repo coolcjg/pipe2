@@ -44,7 +44,7 @@ public class UserService {
 		
 	}
 	
-	public Map<String, Object> userInsert(User user) {
+	public Map<String, Object> insertUser(User user) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		

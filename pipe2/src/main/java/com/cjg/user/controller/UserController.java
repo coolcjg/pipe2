@@ -17,9 +17,12 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@PostMapping("/userInsert")
-	public Map userInsert(@RequestBody User user){
-		return userService.userInsert(user);
+	@PostMapping("/insertUser")
+	public Map insertUser(User user){
+		
+		System.out.println(user);
+		
+		return userService.insertUser(user);
 	}
 	
 	@PostMapping("/checkUserId")
