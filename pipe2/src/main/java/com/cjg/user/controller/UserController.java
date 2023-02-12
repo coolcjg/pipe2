@@ -40,9 +40,9 @@ public class UserController {
 		return userService.userUpdate(user);
 	}
 	
-	@PostMapping("/userDelete")
-	public Map userDelete(@RequestBody User user) {
-		return userService.userDelete(user);
+	@PostMapping("/deleteUser")
+	public Map deleteUser(User user) {
+		return userService.deleteUser(user);
 	}
 	
 	@GetMapping("/userCount")

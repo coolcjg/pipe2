@@ -31,6 +31,8 @@ public class User {
 	
 	private int blockCount = 10;
 	
+	private String[] checkItems;
+	
 	@CreatedDate
 	private LocalDateTime createdDate;
 	

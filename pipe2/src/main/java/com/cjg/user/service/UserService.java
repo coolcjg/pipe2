@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,19 +157,30 @@ public class UserService {
 		return returnMap;
 	}
 	
-	public Map<String, Object> userDelete(User user) {
+	public Map<String, Object> deleteUser(User user) {
+		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		int result =  userRepo.deleteByUserId(user.getUserId());
-		
-		if(result == 1) {
-			returnMap.put("status", "200");
-			returnMap.put("message", "success");
+		int successCount=0;
+		int failCount=0;
+		List<String> failUserIdList = new ArrayList<String>();
+		for(String userId : user.getCheckItems()) {
+			user.setUserId(userId);
 			
-		}else {
-			returnMap.put("status", "400");
-			returnMap.put("message", "fail");
+			int result =  userRepo.deleteByUserId(user.getUserId());
+			
+			if(result == 1) {
+				successCount++;		
+			}else {
+				failCount++;
+				failUserIdList.add(user.getUserId());
+			}			
 		}
+		
+		returnMap.put("status", "200");
+		returnMap.put("successCount", successCount);
+		returnMap.put("failCount", failCount);
+		returnMap.put("failUserIdList", failUserIdList);
 		
 		return returnMap;
 	}
