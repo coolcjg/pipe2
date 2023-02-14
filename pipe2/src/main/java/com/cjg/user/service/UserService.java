@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.cjg.common.Util;
 import com.cjg.user.document.User;
 import com.cjg.user.repository.UserRepo;
 
@@ -197,18 +198,25 @@ public class UserService {
 		return returnMap;
 	}
 	
-	public Map<String, Object> userList() {
+	public Map<String, Object> userList(User user) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		Pageable pageable = PageRequest.of(0, 10, Sort.by("createDate").descending());
+		Pageable pageable = PageRequest.of(user.getPage()-1, user.getBlockCount(), Sort.by("createDate").descending());
 		Page<User> page = userRepo.findAll(pageable);
+
+		long totalPage = Util.getTotalPage(user.getBlockCount(), userRepo.count());
 		
 		List<User> userList = page.getContent();
+		
+		Map<String, Object> pageInfo = new HashMap<String, Object>();
+		pageInfo.put("page", user.getPage());
+		pageInfo.put("totalPage", totalPage);
 		
 		if(userList != null) {
 			returnMap.put("status", "200");
 			returnMap.put("message", "success");
 			returnMap.put("list", userList);
+			returnMap.put("pageInfo", pageInfo);
 		}else {
 			returnMap.put("status", "400");
 			returnMap.put("message", "fail");

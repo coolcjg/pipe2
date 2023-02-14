@@ -29,7 +29,8 @@ public class User {
 	private String orgId;
 	private String deptId;
 	
-	private int blockCount = 10;
+	private int blockCount = 5;
+	private int page = 0;
 	
 	private String[] checkItems;
 	

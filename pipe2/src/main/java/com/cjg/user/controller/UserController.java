@@ -51,8 +51,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/userList")
-	public Map userList() {
-		return userService.userList();
+	public Map userList(User user) {
+		return userService.userList(user);
 	}
 	
 
