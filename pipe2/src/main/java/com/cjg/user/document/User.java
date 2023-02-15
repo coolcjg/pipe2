@@ -34,6 +34,10 @@ public class User {
 	
 	private String[] checkItems;
 	
+	//검색조건
+	private String searchType;
+	private String searchText;
+	
 	@CreatedDate
 	private LocalDateTime createdDate;
 	

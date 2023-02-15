@@ -201,6 +201,8 @@ public class UserService {
 	public Map<String, Object> userList(User user) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
+		System.out.println(user.toString());
+		
 		Pageable pageable = PageRequest.of(user.getPage()-1, user.getBlockCount(), Sort.by("createDate").descending());
 		Page<User> page = userRepo.findAll(pageable);
 
