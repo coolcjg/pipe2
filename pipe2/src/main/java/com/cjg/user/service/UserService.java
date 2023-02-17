@@ -14,9 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.cjg.common.Util;
 import com.cjg.user.document.User;
 import com.cjg.user.repository.UserRepo;
 
@@ -201,12 +202,26 @@ public class UserService {
 	public Map<String, Object> userList(User user) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
+		if(user.getSearchType().equals("")) {
+			user.setSearchType("all");
+		}
+		
 		System.out.println(user.toString());
 		
 		Pageable pageable = PageRequest.of(user.getPage()-1, user.getBlockCount(), Sort.by("createDate").descending());
-		Page<User> page = userRepo.findAll(pageable);
+		
+		Page<User> page;
+		
+		if(user.getSearchType().equals("all")) {
+			page = userRepo.finBydAll(user.getSearchText(), pageable);
+			System.out.println(page.toString());
+		}else if(user.getSearchType().equals("userId")) {
+			page = userRepo.findByUserIdLike(user.getSearchText(), pageable);
+		}else {
+			page = userRepo.findByUserNameLike(user.getSearchText(), pageable);
+		}
 
-		long totalPage = Util.getTotalPage(user.getBlockCount(), userRepo.count());
+		long totalPage = page.getTotalPages();
 		
 		List<User> userList = page.getContent();
 		
