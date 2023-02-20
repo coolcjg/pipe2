@@ -30,14 +30,14 @@ public class UserController {
 		return userService.checkUserId(user);
 	}
 	
-	@GetMapping("/userSelect")
-	public Map userSelect(@RequestBody User user) {
-		return userService.userSelect(user);
+	@GetMapping("/selectUser")
+	public Map selectUser(User user) {
+		return userService.selectUser(user);
 	}	
 	
-	@PostMapping("/userUpdate")
-	public Map userUpdate(@RequestBody User user) {
-		return userService.userUpdate(user);
+	@PostMapping("/updateUser")
+	public Map updateUser(User user) {
+		return userService.updateUser(user);
 	}
 	
 	@PostMapping("/deleteUser")

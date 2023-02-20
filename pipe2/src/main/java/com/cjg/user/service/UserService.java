@@ -121,25 +121,16 @@ public class UserService {
 		return result;
 	}
 	
-	public Map<String,Object> userSelect(User user) {
+	public Map<String,Object> selectUser(User user) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
 		User resultUser = userRepo.findByUserId(user.getUserId());
-		
-		if(resultUser != null) {
-			returnMap.put("status", "200");
-			returnMap.put("message", "success");
-			returnMap.put("user", resultUser);			
-		}else {
-			returnMap.put("status", "400");
-			returnMap.put("message", "not exist user");			
-		}
-		
+		returnMap.put("user", resultUser);	
 		return returnMap;
 	}	
 	
-	public Map<String, Object> userUpdate(User user) {
+	public Map<String, Object> updateUser(User user) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
 		User one = userRepo.findByUserId(user.getUserId());
