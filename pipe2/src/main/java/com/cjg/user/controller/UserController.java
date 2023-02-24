@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cjg.user.document.SearchParam;
 import com.cjg.user.document.User;
 import com.cjg.user.service.UserService;
 
@@ -18,11 +19,8 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/insertUser")
-	public Map insertUser(User user){
-		
-		System.out.println(user);
-		
-		return userService.insertUser(user);
+	public Map insertUser(User user, SearchParam param){		
+		return userService.insertUser(user, param);
 	}
 	
 	@PostMapping("/checkUserId")
@@ -41,8 +39,8 @@ public class UserController {
 	}
 	
 	@PostMapping("/deleteUser")
-	public Map deleteUser(User user) {
-		return userService.deleteUser(user);
+	public Map deleteUser(User user, SearchParam param) {
+		return userService.deleteUser(user, param);
 	}
 	
 	@GetMapping("/userCount")
@@ -51,8 +49,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/userList")
-	public Map userList(User user) {
-		return userService.userList(user);
+	public Map userList(User user, SearchParam param) {		
+		return userService.userList(user, param);
 	}
 	
 

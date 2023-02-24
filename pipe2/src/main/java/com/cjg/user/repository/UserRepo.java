@@ -9,6 +9,7 @@ import com.cjg.user.document.User;
 
 public interface UserRepo extends MongoRepository<User, Integer> {
 	
+		
 	int deleteByUserId(String userId);
 	
 	@Query

@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.cjg.user.document.SearchParam;
 import com.cjg.user.document.User;
 import com.cjg.user.repository.UserRepo;
 
@@ -47,7 +47,7 @@ public class UserService {
 		
 	}
 	
-	public Map<String, Object> insertUser(User user) {
+	public Map<String, Object> insertUser(User user, SearchParam param) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
@@ -63,6 +63,7 @@ public class UserService {
 			User existUser = userRepo.findByUserId(user.getUserId());
 			
 			if(existUser == null) {
+				user.setBirthDay(LocalDateTime.parse(param.getBirthDayParam(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 				String id = userRepo.save(user).get_id();
 				returnMap.put("status", "200");
 				returnMap.put("message", "success");
@@ -150,14 +151,14 @@ public class UserService {
 		return returnMap;
 	}
 	
-	public Map<String, Object> deleteUser(User user) {
+	public Map<String, Object> deleteUser(User user, SearchParam param) {
 		
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
 		int successCount=0;
 		int failCount=0;
 		List<String> failUserIdList = new ArrayList<String>();
-		for(String userId : user.getCheckItems()) {
+		for(String userId : param.getCheckItems()) {
 			user.setUserId(userId);
 			
 			int result =  userRepo.deleteByUserId(user.getUserId());
@@ -190,26 +191,24 @@ public class UserService {
 		return returnMap;
 	}
 	
-	public Map<String, Object> userList(User user) {
+	public Map<String, Object> userList(User user, SearchParam param) {
+			
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		if(user.getSearchType().equals("")) {
-			user.setSearchType("all");
-		}
+		if(param.getSearchType().equals("")) {
+			param.setSearchType("all");
+		}		
 		
-		System.out.println(user.toString());
-		
-		Pageable pageable = PageRequest.of(user.getPage()-1, user.getBlockCount(), Sort.by("createDate").descending());
+		Pageable pageable = PageRequest.of(param.getPage()-1, param.getBlockCount(), Sort.by("createdDate").descending());
 		
 		Page<User> page;
 		
-		if(user.getSearchType().equals("all")) {
-			page = userRepo.finBydAll(user.getSearchText(), pageable);
-			System.out.println(page.toString());
-		}else if(user.getSearchType().equals("userId")) {
-			page = userRepo.findByUserIdLike(user.getSearchText(), pageable);
+		if(param.getSearchType().equals("all")) {
+			page = userRepo.finBydAll(param.getSearchText(), pageable);
+		}else if(param.getSearchType().equals("userId")) {
+			page = userRepo.findByUserIdLike(param.getSearchText(), pageable);
 		}else {
-			page = userRepo.findByUserNameLike(user.getSearchText(), pageable);
+			page = userRepo.findByUserNameLike(param.getSearchText(), pageable);
 		}
 
 		long totalPage = page.getTotalPages();
@@ -217,7 +216,7 @@ public class UserService {
 		List<User> userList = page.getContent();
 		
 		Map<String, Object> pageInfo = new HashMap<String, Object>();
-		pageInfo.put("page", user.getPage());
+		pageInfo.put("page", param.getPage());
 		pageInfo.put("totalPage", totalPage);
 		
 		if(userList != null) {

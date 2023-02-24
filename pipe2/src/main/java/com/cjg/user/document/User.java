@@ -22,21 +22,14 @@ public class User {
 	private String _id;
 	private String userId;
 	private String userName;
+	private LocalDateTime birthDay;
+	
 	
 	private String salt;
 	private String password;
 	
 	private String orgId;
 	private String deptId;
-	
-	private int blockCount = 5;
-	private int page = 0;
-	
-	private String[] checkItems;
-	
-	//검색조건
-	private String searchType;
-	private String searchText;
 	
 	@CreatedDate
 	private LocalDateTime createdDate;
