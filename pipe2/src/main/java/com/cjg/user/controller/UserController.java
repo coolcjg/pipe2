@@ -34,8 +34,8 @@ public class UserController {
 	}	
 	
 	@PostMapping("/updateUser")
-	public Map updateUser(User user) {
-		return userService.updateUser(user);
+	public Map updateUser(User user, SearchParam param) {
+		return userService.updateUser(user, param);
 	}
 	
 	@PostMapping("/deleteUser")

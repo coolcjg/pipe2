@@ -131,7 +131,7 @@ public class UserService {
 		return returnMap;
 	}	
 	
-	public Map<String, Object> updateUser(User user) {
+	public Map<String, Object> updateUser(User user, SearchParam param) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
 		User one = userRepo.findByUserId(user.getUserId());
@@ -139,6 +139,7 @@ public class UserService {
 		if(one != null) {
 			one.setUserName(user.getUserName());
 			one.setLastModifiedDate(LocalDateTime.now());
+			one.setBirthDay(LocalDateTime.parse(param.getBirthDayParam(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 			userRepo.save(one);
 			
 			returnMap.put("status", "200");
