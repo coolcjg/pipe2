@@ -234,6 +234,31 @@ public class UserService {
 		
 	}
 	
+	public Map<String, Object> login(User user){
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		User resultUser = userRepo.findByUserId(user.getUserId());
+		
+		if(resultUser != null) {
+			user.setSalt(resultUser.getSalt());
+			
+			String loginPassword = getEncrypt(user.getPassword(), resultUser.getSalt());
+			String savedPassword = resultUser.getPassword();
+			
+			if(loginPassword.equals(savedPassword)) {
+				returnMap.put("result", "ok");
+				returnMap.put("user", user);
+			}else {
+				returnMap.put("result", "noPassword");
+			}
+			
+		}else {
+			returnMap.put("result", "noUser");
+		}	
+		
+		return returnMap;
+	}
+	
 
 
 }

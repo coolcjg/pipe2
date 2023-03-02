@@ -53,6 +53,11 @@ public class UserController {
 		return userService.userList(user, param);
 	}
 	
+	@PostMapping("/login")
+	public Map login(User user) {
+		return userService.login(user);
+	}	
+	
 
 
 }
