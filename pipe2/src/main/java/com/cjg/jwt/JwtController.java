@@ -11,12 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtController {
 	
 	private final JwtManager jwtManager;
-	
-	@GetMapping("/jwt/create/{username}")
-	public String jwtCreate(@PathVariable String username) {
-		String token = jwtManager.generateToken(username);
-		return token;
-	}
+
 	
 	@GetMapping("/jwt/info/{token}")
 	public JwtManager.TokenInfo jwtInfo(@PathVariable String token){

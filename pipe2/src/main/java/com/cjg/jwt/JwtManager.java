@@ -5,6 +5,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Set;
 
+import com.cjg.user.document.User;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,9 +30,14 @@ public class JwtManager {
 	}
 	
 	// 토큰 생성
-	public String generateToken(String username) {
+	public String generateToken(User user) {
+		
+		System.out.println("jwt token user : " + user);
+		
 		Claims claims = Jwts.claims();
-		claims.put("username", username);
+		
+		claims.put("userId", user.getUserId());
+		claims.put("userName", user.getUserName());
 		
 		return Jwts.builder()
 				.setClaims(claims)
@@ -44,8 +51,8 @@ public class JwtManager {
 	public TokenInfo getTokenInfo(String token) {
 		Claims body = getClaims(token);
 		Set<String> keySet = body.keySet();
-		for(String s : keySet) {
-			System.out.println("s = " + s);
+		for(String key : keySet) {
+			System.out.println("key = " + key + ", value : " + body.get(key)) ;
 		}
 		
 		String username = body.get("username", String.class);

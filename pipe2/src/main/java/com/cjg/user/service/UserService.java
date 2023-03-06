@@ -17,15 +17,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.cjg.jwt.JwtManager;
 import com.cjg.user.document.SearchParam;
 import com.cjg.user.document.User;
 import com.cjg.user.repository.UserRepo;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
+	
+	private final JwtManager jwtManager;	
 	
 	@Autowired
 	private UserRepo userRepo;
@@ -237,7 +242,9 @@ public class UserService {
 	public Map<String, Object> login(User user){
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
+		System.out.println("param user  : " + user);
 		User resultUser = userRepo.findByUserId(user.getUserId());
+		System.out.println("resultUser : " + resultUser);
 		
 		if(resultUser != null) {
 			user.setSalt(resultUser.getSalt());
@@ -246,15 +253,24 @@ public class UserService {
 			String savedPassword = resultUser.getPassword();
 			
 			if(loginPassword.equals(savedPassword)) {
-				returnMap.put("result", "ok");
-				returnMap.put("user", user);
+				returnMap.put("result", "200");
+				returnMap.put("jwt", jwtManager.generateToken(resultUser));
+				
+				Map<String,Object> userMap = new HashMap<String,Object>();
+				userMap.put("userId", resultUser.getUserId());
+				userMap.put("userName", resultUser.getUserName());
+				userMap.put("birthDay", resultUser.getBirthDay());
+				returnMap.put("user", userMap);
+				
 			}else {
-				returnMap.put("result", "noPassword");
+				returnMap.put("result", "400");
 			}
 			
 		}else {
-			returnMap.put("result", "noUser");
-		}	
+			returnMap.put("result", "400");
+		}
+		
+		System.out.println("returnMap : " + returnMap);
 		
 		return returnMap;
 	}
