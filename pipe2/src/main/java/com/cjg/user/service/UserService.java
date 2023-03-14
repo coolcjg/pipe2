@@ -22,6 +22,7 @@ import com.cjg.user.document.SearchParam;
 import com.cjg.user.document.User;
 import com.cjg.user.repository.UserRepo;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +60,7 @@ public class UserService {
 		try{
 			
 			String salt = getSalt();
-			String encPassword = getEncrypt(user.getPassword(), salt);
+			String encPassword = getEncrypt(user.getPassword(), salt);					
 			
 			user.setSalt(salt);
 			user.setPassword(encPassword);
@@ -145,6 +146,12 @@ public class UserService {
 			one.setUserName(user.getUserName());
 			one.setLastModifiedDate(LocalDateTime.now());
 			one.setBirthDay(LocalDateTime.parse(param.getBirthDayParam(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+			
+			String salt = one.getSalt();
+			String encPassword = getEncrypt(user.getPassword(), salt);
+			
+			one.setPassword(encPassword);			
+			
 			userRepo.save(one);
 			
 			returnMap.put("status", "200");
