@@ -246,6 +246,10 @@ public class UserService {
 		
 	}
 	
+	
+	//	200 : 정상
+	//	401 : 아이디 없음
+	//	402 : 비밀번호 오류	 	
 	public Map<String, Object> login(User user){
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
@@ -260,7 +264,8 @@ public class UserService {
 			String savedPassword = resultUser.getPassword();
 			
 			if(loginPassword.equals(savedPassword)) {
-				returnMap.put("result", "200");
+				returnMap.put("code", 200);
+				returnMap.put("codeInfo", "success");
 				returnMap.put("jwt", jwtManager.generateToken(resultUser));
 				
 				Map<String,Object> userMap = new HashMap<String,Object>();
@@ -270,11 +275,13 @@ public class UserService {
 				returnMap.put("user", userMap);
 				
 			}else {
-				returnMap.put("result", "400");
+				returnMap.put("code", 402);
+				returnMap.put("codeInfo", "not match password");
 			}
 			
 		}else {
-			returnMap.put("result", "400");
+			returnMap.put("code", 401);
+			returnMap.put("codeInfo", "no id");
 		}
 		
 		System.out.println("returnMap : " + returnMap);
